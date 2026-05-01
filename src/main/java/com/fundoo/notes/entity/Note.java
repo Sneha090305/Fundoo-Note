@@ -15,14 +15,11 @@ public class Note {
     private Long id;
 
     private String title;
-
     private String description;
 
     private Long userId;
 
-
-    private boolean deleted = false;
-
     private boolean pinned = false;
     private boolean archived = false;
+    private boolean deleted = false;
 }

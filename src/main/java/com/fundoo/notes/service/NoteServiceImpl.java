@@ -166,4 +166,33 @@ public class NoteServiceImpl implements NoteService {
                 user.getId(), query
         );
     }
+
+
+
+    @Override
+    public List<Note> getPinnedNotes(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return noteRepository.findByUserIdAndPinnedTrue(user.getId());
+    }
+
+    @Override
+    public List<Note> getArchivedNotes(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return noteRepository.findByUserIdAndArchivedTrue(user.getId());
+    }
+
+    @Override
+    public List<Note> getTrashedNotes(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return noteRepository.findByUserIdAndDeletedTrue(user.getId());
+    }
 }

@@ -76,4 +76,19 @@ public class NoteController {
 
         return service.searchNotes(authentication.getName(), q);
     }
+
+    @GetMapping("/pinned")
+    public List<Note> getPinnedNotes(Authentication auth) {
+        return service.getPinnedNotes(auth.getName());
+    }
+
+    @GetMapping("/archived")
+    public List<Note> getArchivedNotes(Authentication auth) {
+        return service.getArchivedNotes(auth.getName());
+    }
+
+    @GetMapping("/trash")
+    public List<Note> getTrashedNotes(Authentication auth) {
+        return service.getTrashedNotes(auth.getName());
+    }
 }

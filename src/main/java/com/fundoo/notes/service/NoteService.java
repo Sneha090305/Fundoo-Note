@@ -22,4 +22,10 @@ public interface NoteService {
     Note updateNote(Long noteId, String email, UpdateNoteRequest request);
 
     List<Note> searchNotes(String email, String query);
+
+    List<Note> getPinnedNotes(String email);
+
+    List<Note> getArchivedNotes(String email);
+
+    List<Note> getTrashedNotes(String email);
 }
