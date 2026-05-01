@@ -4,6 +4,14 @@ spring:
     username: root
     password: "&Andy@1293"
 
+
+    spring:
+      rabbitmq:
+        host: localhost
+        port: 5672
+        username: guest
+        password: guest
+
   jpa:
     hibernate:
       ddl-auto: update
