@@ -1,7 +1,9 @@
 package com.fundoo.notes.service;
 
 import com.fundoo.notes.dto.NoteRequest;
+import com.fundoo.notes.dto.UpdateNoteRequest;
 import com.fundoo.notes.entity.Note;
+
 import java.util.List;
 
 public interface NoteService {
@@ -15,4 +17,9 @@ public interface NoteService {
     String toggleTrash(Long noteId, String email);
     String restoreNote(Long noteId, String email);
     String deleteNotePermanently(Long noteId, String email);
+
+
+    Note updateNote(Long noteId, String email, UpdateNoteRequest request);
+
+    List<Note> searchNotes(String email, String query);
 }

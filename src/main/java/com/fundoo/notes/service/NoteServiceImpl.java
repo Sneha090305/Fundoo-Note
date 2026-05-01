@@ -1,13 +1,14 @@
 package com.fundoo.notes.service;
 
 import com.fundoo.notes.dto.NoteRequest;
+import com.fundoo.notes.dto.UpdateNoteRequest;
 import com.fundoo.notes.entity.Note;
 import com.fundoo.notes.entity.User;
 import com.fundoo.notes.repository.NoteRepository;
 import com.fundoo.notes.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.fundoo.notes.entity.Note;
+
 import java.util.List;
 
 @Service
@@ -136,4 +137,33 @@ public class NoteServiceImpl implements NoteService {
         return "Note permanently deleted";
     }
 
+    @Override
+    public Note updateNote(Long noteId, String email, UpdateNoteRequest request) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new RuntimeException("Note not found"));
+
+        if (!note.getUserId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        note.setTitle(request.getTitle());
+        note.setDescription(request.getDescription());
+
+        return noteRepository.save(note);
+    }
+
+    @Override
+    public List<Note> searchNotes(String email, String query) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return noteRepository.findByUserIdAndTitleContainingIgnoreCaseAndDeletedFalse(
+                user.getId(), query
+        );
+    }
 }

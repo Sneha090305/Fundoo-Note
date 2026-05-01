@@ -1,6 +1,7 @@
 package com.fundoo.notes.controller;
 
 import com.fundoo.notes.dto.NoteRequest;
+import com.fundoo.notes.dto.UpdateNoteRequest;
 import com.fundoo.notes.entity.Note;
 import com.fundoo.notes.service.NoteService;
 import lombok.RequiredArgsConstructor;
@@ -9,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/notes")
-@RequiredArgsConstructor
 public class NoteController {
 
     private final NoteService service;
@@ -20,17 +21,13 @@ public class NoteController {
     public String createNote(@RequestBody NoteRequest request,
                              Authentication authentication) {
 
-        String email = authentication.getName();
-
-        return service.createNote(request, email);
+        return service.createNote(request, authentication.getName());
     }
 
     @GetMapping
     public List<Note> getNotes(Authentication authentication) {
 
-        String email = authentication.getName(); // from JWT
-
-        return service.getNotes(email);
+        return service.getNotes(authentication.getName());
     }
 
     @PutMapping("/pin/{id}")
@@ -50,14 +47,33 @@ public class NoteController {
 
         return service.toggleTrash(id, auth.getName());
     }
+
     @PutMapping("/restore/{id}")
     public String restoreNote(@PathVariable Long id, Authentication auth) {
 
         return service.restoreNote(id, auth.getName());
     }
+
     @DeleteMapping("/{id}")
     public String deleteNote(@PathVariable Long id, Authentication auth) {
 
         return service.deleteNotePermanently(id, auth.getName());
+    }
+
+
+    @PutMapping("/{id}")
+    public Note updateNote(@PathVariable Long id,
+                           @RequestBody UpdateNoteRequest request,
+                           Authentication authentication) {
+
+        return service.updateNote(id, authentication.getName(), request);
+    }
+
+
+    @GetMapping("/search")
+    public List<Note> searchNotes(@RequestParam String q,
+                                  Authentication authentication) {
+
+        return service.searchNotes(authentication.getName(), q);
     }
 }

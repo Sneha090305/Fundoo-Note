@@ -18,10 +18,11 @@ public class Note {
 
     private String description;
 
-    // 🔥 NO relation — just userId
     private Long userId;
 
-    private boolean isPinned = false;
-    private boolean isArchived = false;
-    private boolean isDeleted = false;
+
+    private boolean deleted = false;
+
+    private boolean pinned = false;
+    private boolean archived = false;
 }

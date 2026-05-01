@@ -8,12 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import java.util.Collections;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
@@ -33,20 +32,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
             String token = authHeader.substring(7);
 
-            String email = jwtUtil.extractUsername(token);
+            try {
+                String email = jwtUtil.extractUsername(token);
 
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(
-                                email,
-                                null,
-                                Collections.emptyList()
-                        );
+                if (email != null
+                        && SecurityContextHolder.getContext().getAuthentication() == null
+                        && !jwtUtil.isTokenExpired(token)) {
 
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    email,
+                                    null,
+                                    Collections.emptyList()
+                            );
 
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+
+            } catch (Exception e) {
+                System.out.println("JWT ERROR: " + e.getMessage());
             }
         }
 
