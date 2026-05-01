@@ -1,5 +1,6 @@
 package com.fundoo.notes.controller;
 
+import com.fundoo.notes.dto.LoginRequest;
 import com.fundoo.notes.dto.RegisterRequest;
 import com.fundoo.notes.service.UserService;
 import jakarta.validation.Valid;
@@ -16,5 +17,10 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@Valid @RequestBody RegisterRequest request) {
         return service.register(request);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request) {
+        return service.login(request);
     }
 }

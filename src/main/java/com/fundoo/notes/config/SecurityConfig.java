@@ -14,7 +14,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()   // ✅ allow register
+                        .requestMatchers("/auth/**").permitAll()   // ✅ allow BOTH register & login
                         .anyRequest().authenticated()
                 );
 

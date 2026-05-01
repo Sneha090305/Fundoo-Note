@@ -1,9 +1,12 @@
 package com.fundoo.notes.service;
 
+import com.fundoo.notes.dto.LoginRequest;
 import com.fundoo.notes.dto.RegisterRequest;
 import com.fundoo.notes.entity.User;
 import com.fundoo.notes.repository.UserRepository;
+import com.fundoo.notes.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +14,9 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+    private final JwtUtil jwtUtil;
+
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Override
     public String register(RegisterRequest request) {
@@ -18,10 +24,23 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
+        user.setPassword(encoder.encode(request.getPassword()));
 
         repository.save(user);
 
         return "User Registered Successfully";
+    }
+
+    @Override
+    public String login(LoginRequest request) {
+
+        User user = repository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!encoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return jwtUtil.generateToken(user.getEmail());
     }
 }
