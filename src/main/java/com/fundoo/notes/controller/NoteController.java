@@ -50,4 +50,14 @@ public class NoteController {
 
         return service.toggleTrash(id, auth.getName());
     }
+    @PutMapping("/restore/{id}")
+    public String restoreNote(@PathVariable Long id, Authentication auth) {
+
+        return service.restoreNote(id, auth.getName());
+    }
+    @DeleteMapping("/{id}")
+    public String deleteNote(@PathVariable Long id, Authentication auth) {
+
+        return service.deleteNotePermanently(id, auth.getName());
+    }
 }

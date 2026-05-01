@@ -13,4 +13,6 @@ public interface NoteService {
     String togglePin(Long noteId, String email);
     String toggleArchive(Long noteId, String email);
     String toggleTrash(Long noteId, String email);
+    String restoreNote(Long noteId, String email);
+    String deleteNotePermanently(Long noteId, String email);
 }

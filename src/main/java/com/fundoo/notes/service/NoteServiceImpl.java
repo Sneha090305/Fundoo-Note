@@ -99,4 +99,41 @@ public class NoteServiceImpl implements NoteService {
         return "Trash status updated";
     }
 
+    @Override
+    public String restoreNote(Long noteId, String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new RuntimeException("Note not found"));
+
+        if (!note.getUserId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        note.setDeleted(false);
+        noteRepository.save(note);
+
+        return "Note restored successfully";
+    }
+
+    @Override
+    public String deleteNotePermanently(Long noteId, String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new RuntimeException("Note not found"));
+
+        if (!note.getUserId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        noteRepository.delete(note);
+
+        return "Note permanently deleted";
+    }
+
 }
