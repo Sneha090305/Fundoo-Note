@@ -7,6 +7,7 @@ import com.fundoo.notes.service.NoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -90,5 +91,22 @@ public class NoteController {
     @GetMapping("/trash")
     public List<Note> getTrashedNotes(Authentication auth) {
         return service.getTrashedNotes(auth.getName());
+    }
+
+    @GetMapping("/paginated")
+    public Page<Note> getNotesPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction,
+            Authentication authentication
+    ) {
+        return service.getNotesPaginated(
+                authentication.getName(),
+                page,
+                size,
+                sortBy,
+                direction
+        );
     }
 }

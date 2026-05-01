@@ -2,6 +2,8 @@ package com.fundoo.notes.repository;
 
 import com.fundoo.notes.entity.Note;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,4 +20,6 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     List<Note> findByUserIdAndDeletedTrue(Long userId);
 
     List<Note> findByUserIdAndTitleContainingIgnoreCaseAndDeletedFalse(Long userId, String title);
+
+    Page<Note> findByUserIdAndDeletedFalse(Long userId, Pageable pageable);
 }

@@ -8,6 +8,10 @@ import com.fundoo.notes.repository.NoteRepository;
 import com.fundoo.notes.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -194,5 +198,20 @@ public class NoteServiceImpl implements NoteService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return noteRepository.findByUserIdAndDeletedTrue(user.getId());
+    }
+
+    @Override
+    public Page<Note> getNotesPaginated(String email, int page, int size, String sortBy, String direction) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return noteRepository.findByUserIdAndDeletedFalse(user.getId(), pageable);
     }
 }
