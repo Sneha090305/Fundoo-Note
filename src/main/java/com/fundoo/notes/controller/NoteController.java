@@ -1,10 +1,13 @@
 package com.fundoo.notes.controller;
 
 import com.fundoo.notes.dto.NoteRequest;
+import com.fundoo.notes.entity.Note;
 import com.fundoo.notes.service.NoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/notes")
@@ -20,5 +23,13 @@ public class NoteController {
         String email = authentication.getName(); // 🔥 from JWT
 
         return service.createNote(request, email);
+    }
+
+    @GetMapping
+    public List<Note> getNotes(Authentication authentication) {
+
+        String email = authentication.getName(); // from JWT
+
+        return service.getNotes(email);
     }
 }
