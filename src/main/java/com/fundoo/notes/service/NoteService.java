@@ -9,4 +9,8 @@ public interface NoteService {
     String createNote(NoteRequest request, String email);
 
     List<Note> getNotes(String email);
+
+    String togglePin(Long noteId, String email);
+    String toggleArchive(Long noteId, String email);
+    String toggleTrash(Long noteId, String email);
 }

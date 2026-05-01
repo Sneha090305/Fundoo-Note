@@ -20,7 +20,7 @@ public class NoteController {
     public String createNote(@RequestBody NoteRequest request,
                              Authentication authentication) {
 
-        String email = authentication.getName(); // 🔥 from JWT
+        String email = authentication.getName();
 
         return service.createNote(request, email);
     }
@@ -31,5 +31,23 @@ public class NoteController {
         String email = authentication.getName(); // from JWT
 
         return service.getNotes(email);
+    }
+
+    @PutMapping("/pin/{id}")
+    public String togglePin(@PathVariable Long id, Authentication auth) {
+
+        return service.togglePin(id, auth.getName());
+    }
+
+    @PutMapping("/archive/{id}")
+    public String toggleArchive(@PathVariable Long id, Authentication auth) {
+
+        return service.toggleArchive(id, auth.getName());
+    }
+
+    @PutMapping("/trash/{id}")
+    public String toggleTrash(@PathVariable Long id, Authentication auth) {
+
+        return service.toggleTrash(id, auth.getName());
     }
 }
